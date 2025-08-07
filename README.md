@@ -14,7 +14,9 @@ Interface Limpa: Design responsivo e fácil de usar.
 Você pode usar a calculadora diretamente no link abaixo:
 
 Acessar https://vercel.com/viktorr2003s-projects/custo-de-produto/4CAcVjogUzZisXXZrmK8EjtPKnwE
+
 🛠️ Tecnologias Utilizadas
+
 HTML5
 
 Tailwind CSS
