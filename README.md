@@ -13,7 +13,7 @@ Interface Limpa: Design responsivo e fácil de usar.
 🚀 Acessar a Ferramenta
 Você pode usar a calculadora diretamente no link abaixo:
 
-Acessar https://vercel.com/viktorr2003s-projects/custo-de-produto/4CAcVjogUzZisXXZrmK8EjtPKnwE
+Acessar https://custo-de-produto-git-main-viktorr2003s-projects.vercel.app/
 
 🛠️ Tecnologias Utilizadas
 
