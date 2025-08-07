@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Custo de Produto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .input-group {
+            position: relative;
+        }
+        .input-group span {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            pointer-events: none;
+        }
+        .input-group input {
+            padding-left: 35px;
+        }
+        .input-group input.percent {
+            padding-right: 30px;
+            padding-left: 10px;
+        }
+        .input-group span.percent-sign {
+            left: auto;
+            right: 12px;
+            padding-left: 5px;
+            background-color: #f9fafb;
+        }
+        .metric-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            /* Cor principal alterada para teal */
+            color: #0d9488; 
+        }
+        .metric-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+        .metric-description {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900">Calculadora de Custo de Produto</h1>
+            <p class="text-lg text-gray-600 mt-2">Formule o preço de venda e defina metas de marketing para seus produtos.</p>
+        </header>
+
+        <div class="space-y-8">
+            <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Coluna de Entradas -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-200">
+                    <h2 class="text-2xl font-semibold mb-6 border-b pb-3">1. Insira os Custos e a Margem</h2>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label for="custoProduto" class="block text-sm font-medium text-gray-700 mb-1">Custo de Aquisição do Produto</label>
+                            <div class="input-group">
+                                <span>R$</span>
+                                <input type="number" id="custoProduto" placeholder="Ex: 50,00" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="despesasFixas" class="block text-sm font-medium text-gray-700 mb-1">Despesas Fixas (%)</label>
+                             <div class="input-group">
+                                <input type="number" id="despesasFixas" placeholder="Ex: 10" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition percent">
+                                <span class="percent-sign">%</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Rateio do aluguel, salários, etc.</p>
+                        </div>
+
+                        <div>
+                            <label for="despesasVariaveis" class="block text-sm font-medium text-gray-700 mb-1">Despesas Variáveis (%)</label>
+                            <div class="input-group">
+                                <input type="number" id="despesasVariaveis" placeholder="Ex: 15" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition percent">
+                                 <span class="percent-sign">%</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Comissões, impostos sobre venda, taxas de cartão.</p>
+                        </div>
+                        
+                        <div>
+                            <label for="margemLucro" class="block text-sm font-medium text-gray-700 mb-1">Margem de Lucro Desejada (%)</label>
+                            <div class="input-group">
+                                <input type="number" id="margemLucro" placeholder="Ex: 20" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition percent">
+                                <span class="percent-sign">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna de Resultados -->
+                <div class="bg-teal-600 text-white p-6 rounded-2xl shadow-lg flex flex-col">
+                    <h2 class="text-2xl font-semibold mb-4 border-b border-teal-400 pb-3">2. Resultado do Preço</h2>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center text-center">
+                        <p class="text-lg text-teal-100">Preço de Venda Sugerido</p>
+                        <p id="precoVenda" class="text-5xl font-bold my-4">R$ 0,00</p>
+                        
+                        <div id="breakdown" class="w-full mt-4 space-y-3 text-left">
+                            <div class="flex justify-between items-center bg-teal-700/50 p-3 rounded-lg">
+                                <span class="font-medium">Índice Markup:</span>
+                                <span id="markupIndex" class="font-bold text-lg">0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-teal-700/50 p-3 rounded-lg">
+                                <span class="font-medium">Lucro Bruto por Venda:</span>
+                                <span id="lucroValor" class="font-bold text-lg">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <button id="resetButton" class="w-full bg-white text-teal-600 font-bold py-3 px-4 rounded-lg hover:bg-gray-100 transition shadow">
+                            Limpar Campos
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Seção de Métricas de Marketing -->
+            <section id="marketingMetricsCard" class="bg-white p-6 rounded-2xl shadow-md border border-gray-200">
+                <h2 class="text-2xl font-semibold mb-6 border-b pb-3 text-center">3. Metas de Marketing para Atingir o Lucro</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Card ACoS -->
+                    <div class="metric-card">
+                        <h3 class="metric-label">ACoS de Equilíbrio</h3>
+                        <p id="acosEquilibrioDisplay" class="metric-value">0.00%</p>
+                        <p class="metric-description">Para ter lucro, seu ACoS (Custo de Publicidade sobre Vendas) precisa ser <strong>menor</strong> que este valor.</p>
+                    </div>
+                    <!-- Card ROAS -->
+                    <div class="metric-card">
+                        <h3 class="metric-label">ROAS de Equilíbrio</h3>
+                        <p id="roasEquilibrioDisplay" class="metric-value">0.00</p>
+                        <p class="metric-description">Para ter lucro, seu ROAS (Retorno sobre Investimento em Publicidade) precisa ser <strong>maior</strong> que este valor.</p>
+                    </div>
+                </div>
+                 <div class="mt-6 text-center text-sm text-gray-500">
+                    <p><strong class="text-gray-600">ACoS</strong> = (Custo com Anúncios / Receita) * 100. <strong class="text-gray-600">ROAS</strong> = Receita / Custo com Anúncios.</p>
+                    <p>As metas acima representam o ponto de equilíbrio, onde o lucro da venda paga exatamente o custo do anúncio.</p>
+                </div>
+            </section>
+        </div>
+        
+        <footer class="text-center mt-10 text-gray-500 text-sm">
+            <p><strong>Como o cálculo funciona?</strong> O preço de venda é calculado pela fórmula: Preço = Custo de Aquisição / (1 - (Soma de todas as porcentagens / 100)).</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Seleciona os elementos do DOM
+        const custoProdutoInput = document.getElementById('custoProduto');
+        const despesasFixasInput = document.getElementById('despesasFixas');
+        const despesasVariaveisInput = document.getElementById('despesasVariaveis');
+        const margemLucroInput = document.getElementById('margemLucro');
+        const resetButton = document.getElementById('resetButton');
+
+        const precoVendaDisplay = document.getElementById('precoVenda');
+        const markupIndexDisplay = document.getElementById('markupIndex');
+        const lucroValorDisplay = document.getElementById('lucroValor');
+        const breakdownDiv = document.getElementById('breakdown');
+        
+        const marketingMetricsCard = document.getElementById('marketingMetricsCard');
+        const acosEquilibrioDisplay = document.getElementById('acosEquilibrioDisplay');
+        const roasEquilibrioDisplay = document.getElementById('roasEquilibrioDisplay');
+
+        // Função para formatar valores como moeda brasileira
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // Função principal para calcular tudo
+        function calcularTudo() {
+            // Converte os valores dos inputs para números, tratando campos vazios como 0
+            const custoProduto = parseFloat(custoProdutoInput.value) || 0;
+            const despesasFixas = parseFloat(despesasFixasInput.value) || 0;
+            const despesasVariaveis = parseFloat(despesasVariaveisInput.value) || 0;
+            const margemLucro = parseFloat(margemLucroInput.value) || 0;
+
+            // --- Cálculo do Preço de Venda ---
+            const somaPercentuais = despesasFixas + despesasVariaveis + margemLucro;
+
+            if (somaPercentuais >= 100) {
+                precoVendaDisplay.textContent = 'Inválido';
+                markupIndexDisplay.textContent = '---';
+                lucroValorDisplay.textContent = '---';
+                breakdownDiv.classList.add('hidden');
+            } else {
+                breakdownDiv.classList.remove('hidden');
+                const divisor = 1 - (somaPercentuais / 100);
+                const markupIndex = 1 / divisor;
+                const precoVenda = custoProduto * markupIndex;
+                const lucroValor = precoVenda * (margemLucro / 100);
+
+                if (custoProduto > 0) {
+                    precoVendaDisplay.textContent = formatCurrency(precoVenda);
+                    markupIndexDisplay.textContent = markupIndex.toFixed(3);
+                    lucroValorDisplay.textContent = formatCurrency(lucroValor);
+                } else {
+                    precoVendaDisplay.textContent = 'R$ 0,00';
+                    markupIndexDisplay.textContent = '0.00';
+                    lucroValorDisplay.textContent = 'R$ 0,00';
+                }
+            }
+            
+            // --- Cálculo das Métricas de Marketing ---
+            if (margemLucro > 0 && margemLucro < 100) {
+                marketingMetricsCard.style.display = 'block';
+                
+                // ACoS de Equilíbrio é a própria margem de lucro.
+                const acosEquilibrio = margemLucro;
+                
+                // ROAS de Equilíbrio é o inverso da margem de lucro.
+                const roasEquilibrio = 1 / (margemLucro / 100);
+
+                acosEquilibrioDisplay.textContent = acosEquilibrio.toFixed(2) + '%';
+                roasEquilibrioDisplay.textContent = roasEquilibrio.toFixed(2);
+            } else {
+                // Esconde as métricas se a margem de lucro for inválida ou zero
+                marketingMetricsCard.style.display = 'none';
+                acosEquilibrioDisplay.textContent = '0.00%';
+                roasEquilibrioDisplay.textContent = '0.00';
+            }
+        }
+
+        // Função para limpar todos os campos e resultados
+        function resetCalculator() {
+            custoProdutoInput.value = '';
+            despesasFixasInput.value = '';
+            despesasVariaveisInput.value = '';
+            margemLucroInput.value = '';
+            calcularTudo(); // Recalcula para zerar a exibição
+        }
+
+        // Adiciona ouvintes de evento para recalcular ao digitar
+        const inputs = [custoProdutoInput, despesasFixasInput, despesasVariaveisInput, margemLucroInput];
+        inputs.forEach(input => input.addEventListener('input', calcularTudo));
+        resetButton.addEventListener('click', resetCalculator);
+
+        // Executa o cálculo inicial ao carregar a página
+        calcularTudo();
+    </script>
+
+</body>
+</html>
